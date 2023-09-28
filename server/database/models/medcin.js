@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configdb");
 
-const Doctor = sequelize.define("Doctor", {
+const Medecin = sequelize.define("Medecin", {
   nom: {
     type: DataTypes.STRING,
     unique: true,
@@ -42,12 +42,5 @@ const Doctor = sequelize.define("Doctor", {
     unique: true,
   },
 });
-// User.hasMany(comments, {
-//     foreignKey: "userId",
-//     onDelete: "CASCADE",
-//   });
-//   comments.belongsTo(User, {
-//     foreignKey: "userId",
-//   });
 
-module.exports = { Doctor };
+module.exports = { Medecin };
