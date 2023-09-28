@@ -7,7 +7,7 @@ const doctorRoutes = require("./routes/medcinRoutes");
 const adminRoutes = require("./routes/AdminRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors({ origin: true }));
 // app.use(cookieParser());
