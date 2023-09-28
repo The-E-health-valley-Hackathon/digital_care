@@ -36,4 +36,6 @@ module.exports = {
         .json({ message: "Error fetching user", error: err.message });
     }
   },
+
+  
 };
