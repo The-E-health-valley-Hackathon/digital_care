@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("digitalCare", "root", "root", {
+const sequelize = new Sequelize("digitalCare", "root", "firemanfireman@@", {
   host: "localhost",
   dialect: "mysql",
   logging: false, //! comment this if you want to see console log on server start

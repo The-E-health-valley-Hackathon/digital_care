@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configdb");
 
-const Doctor = sequelize.define("Doctor", {
+const Medcin = sequelize.define("Medcin", {
   nom: {
     type: DataTypes.STRING,
     unique: true,
@@ -44,4 +44,4 @@ const Doctor = sequelize.define("Doctor", {
 });
 
 
-module.exports = { Doctor };
+module.exports = { Medcin };
