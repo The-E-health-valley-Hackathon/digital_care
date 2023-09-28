@@ -1,53 +1,59 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../configdb");
+const { DataTypes } = require('sequelize');
+const sequelize = require('../configdb');
 
-const Patient = sequelize.define("Patient", {
+const Patient = sequelize.define('Patient', {
   nom: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false,
+    unique: true,
   },
   prenom: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false,
+    unique: true,
   },
   gender: {
-    type: DataTypes.ENUM("homme", "femme"),
+    type: DataTypes.ENUM('homme', 'femme'),
     allowNull: false,
   },
   age: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.INTEGER, // Use DataTypes.INTEGER for age
     allowNull: false,
   },
   poids: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like poids
     allowNull: false,
   },
   taille: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like taille
     allowNull: false,
   },
   corporelle: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like corporelle
     allowNull: false,
   },
   imc: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like imc
     allowNull: false,
   },
   plasmatique: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like plasmatique
     allowNull: false,
   },
   clairance: {
-    type: DataTypes.NUMBER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like clairance
     allowNull: false,
   },
-  dateAdmission: DataTypes.DATE,
-  dateprotocole: DataTypes.DATE,
+  dateAdmission: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
+  dateprotocole: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  },
 
-   typegreffe: {
+  typegreffe: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
@@ -55,13 +61,10 @@ const Patient = sequelize.define("Patient", {
     },
   },
 
-
-
   is_approved: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-
 });
 
 module.exports = { Patient };
