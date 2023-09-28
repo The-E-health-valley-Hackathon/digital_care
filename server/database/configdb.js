@@ -1,13 +1,13 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("digitalCare", "root", "root", {
+const sequelize = new Sequelize("digitalcare", "root", "root", {
   host: "localhost",
   dialect: "mysql",
   logging: false, //! comment this if you want to see console log on server start
 });
 
 sequelize
-  .query("CREATE DATABASE IF NOT EXISTS `digitalCare`;")
+  .query("CREATE DATABASE IF NOT EXISTS `digitalcare`;")
   .then(() => {
     console.log("db connected");
   })
