@@ -3,11 +3,15 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Header from '../../components/Header';
-import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for styling
+import { useState } from 'react';
 
 const AjoutPatient = () => {
   const isNonMobile = useMediaQuery('(min-width:600px)');
+  const [patientData, setPatientData] = useState(null);
 
   // Calculate IMC whenever height or weight changes
   const calculateIMC = (height, weight) => {
@@ -19,29 +23,76 @@ const AjoutPatient = () => {
 
   // Calculate Crawford Body Surface Area (BSA) whenever height or weight changes
   const calculateBSA = (poids, taille) => {
-    if (!poids || !taille) return "";
+    if (!poids || !taille) return '';
     // const logpoids = Math.log10(poids);
-    const x = 0.7285 - 0.0188 * ( Math.log(poids));
+    const x = 0.7285 - 0.0188 * Math.log(poids);
     const bsa = (
       0.0003207 *
-      Math.pow(poids , x  ) *
+      Math.pow(poids, x) *
       Math.pow(taille, 0.3)
     ).toFixed(2);
     return bsa;
   };
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
+  const handleFormSubmit = async (values) => {
+    console.log("values :" , values);
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/patient/add',
+        values
+      );
+      if (response.status === 201) {
+        // Update the patient data in state when the patient is added successfully
+        setPatientData({ ...values, imc: calculateIMC(values.taille, values.poids), corporelle: calculateBSA(values.poids, values.taille) });
+        // Show a success toast notification
+        toast.success('Patient added successfully', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else {
+        // Show an error toast notification
+        toast.error('Failed to add patient', {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      }
+    } catch (error) {
+      // Show an error toast notification
+      toast.error('An error occurred', {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      console.error('An error occurred:', error);
+    }
   };
+  const initialValues = {
+    prenom: '',
+    nom: '',
+    gender: '',
+    age: 0, 
+    poids: 0,
+    taille: 0,
+    corporelle: 0,
+    imc: 0,
+    doctors_id: 1,
+    plasmatique: 14,
+    clairance: 17,
+    dateprotocole: '',
+    dateadmission: '',
+    typegreffe: '',
+  };
+
+  const validationSchema = yup.object().shape({
+    typegreffe: yup.string().required('Type de greffe est requis'),
+  });
+  
 
   return (
     <Box m="20px">
       <Header title="Fiche de patient" subtitle="Créer un nouveau patient" />
 
       <Formik
-        onSubmit={handleFormSubmit}
+                onSubmit={handleFormSubmit}
+
         initialValues={initialValues}
-        validationSchema={checkoutSchema}
+        validationSchema={validationSchema}
       >
         {({
           values,
@@ -104,8 +155,8 @@ const AjoutPatient = () => {
                   native: true,
                 }}
               >
-                <option value="Homme">Male</option>
-                <option value="Femme">Female</option>
+                <option value="homme">Homme</option>
+                <option value="femme">Femme</option>
               </TextField>
 
               <TextField
@@ -122,53 +173,53 @@ const AjoutPatient = () => {
                 sx={{ gridColumn: 'span 2' }}
               />
               <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              label="Poids"
-              onBlur={handleBlur}
-              onChange={(e) => {
-                handleChange(e);
-                const imc = calculateIMC(values.taille, e.target.value);
-                const bsa = calculateBSA(e.target.value, values.taille);
-                setFieldValue("imc", imc);
-                setFieldValue("corporelle", bsa);
-              }}
-              value={values.poids}
-              name="poids"
-              error={!!touched.poids && !!errors.poids}
-              helperText={touched.poids && errors.poids}
-              sx={{ gridColumn: "span 2" }}
-            />
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Poids"
+                onBlur={handleBlur}
+                onChange={(e) => {
+                  handleChange(e);
+                  const imc = calculateIMC(values.taille, e.target.value);
+                  const bsa = calculateBSA(e.target.value, values.taille);
+                  setFieldValue('imc', imc);
+                  setFieldValue('corporelle', bsa);
+                }}
+                value={values.poids}
+                name="poids"
+                error={!!touched.poids && !!errors.poids}
+                helperText={touched.poids && errors.poids}
+                sx={{ gridColumn: 'span 2' }}
+              />
               <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              label="Taille"
-              onBlur={handleBlur}
-              onChange={(e) => {
-                handleChange(e);
-                const imc = calculateIMC(e.target.value, values.poids);
-                const bsa = calculateBSA(values.poids, e.target.value);
-                setFieldValue("imc", imc);
-                setFieldValue("corporelle", bsa);
-              }}
-              value={values.taille}
-              name="taille"
-              error={!!touched.taille && !!errors.taille}
-              helperText={touched.taille && errors.taille}
-              sx={{ gridColumn: "span 2" }}
-            />
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Taille"
+                onBlur={handleBlur}
+                onChange={(e) => {
+                  handleChange(e);
+                  const imc = calculateIMC(e.target.value, values.poids);
+                  const bsa = calculateBSA(values.poids, e.target.value);
+                  setFieldValue('imc', imc);
+                  setFieldValue('corporelle', bsa);
+                }}
+                value={values.taille}
+                name="taille"
+                error={!!touched.taille && !!errors.taille}
+                helperText={touched.taille && errors.taille}
+                sx={{ gridColumn: 'span 2' }}
+              />
               <TextField
-              fullWidth
-              variant="filled"
-              type="text"
-              label="Surface corporelle (m²)"
-              disabled // Prevent user from modifying BSA
-              value={values.corporelle}
-              name="corporelle"
-              sx={{ gridColumn: "span 2" }}
-            />
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Surface corporelle (m²)"
+                disabled // Prevent user from modifying BSA
+                value={values.corporelle}
+                name="corporelle"
+                sx={{ gridColumn: 'span 2' }}
+              />
               <TextField
                 fullWidth
                 variant="filled"
@@ -185,8 +236,8 @@ const AjoutPatient = () => {
                 type="text"
                 label="Créatinine plasmatique (µmol/l)"
                 disabled // Prevent user from modifying IMC
-                value={values.creatine}
-                name="imc"
+                value={values.plasmatique}
+                name="plasmatique"
                 sx={{ gridColumn: 'span 2' }}
               />
               <TextField
@@ -195,73 +246,62 @@ const AjoutPatient = () => {
                 type="text"
                 label="Clairance créatinine (mL/min)"
                 disabled // Prevent user from modifying IMC
-                value={values.creatine}
-                name="imc"
+                value={values.clairance}
+                name="clairance"
                 sx={{ gridColumn: 'span 2' }}
               />
-               <TextField
-                fullWidth
-                variant="filled"
-                type="date" // Use type="date" for date input
-                label="Date de début de conditionnement / d'admission"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.date}
-                name="date"
-                error={!!touched.date && !!errors.date}
-                helperText={touched.date && errors.date}
-                sx={{ gridColumn: 'span 2' }}
-              />
-<FormControl component="fieldset" sx={{ gridColumn: 'span 2' }}>
-  <FormLabel component="legend">Type de greffe</FormLabel>
-  <RadioGroup
-    row
-    aria-label="type-de-greffe"
-    name="typeDeGreffe"
-    value={values.typeDeGreffe}
-    onChange={handleChange}
-  >
-    <FormControlLabel
-      value="auto-greffe"
-      control={<Radio />}
-      label="Auto-greffe"
-    />
-    <FormControlLabel
-      value="allo-greffe"
-      control={<Radio />}
-      label="Allo-greffe"
-    />
-    <FormControlLabel
-      value="greffehapio"
-      control={<Radio />}
-      label="Greffe hapio-identique"
-    />
-    <FormControlLabel
-      value="pas-de-greffe"
-      control={<Radio />}
-      label="Pas de greffe"
-    />
-  </RadioGroup>
-</FormControl>
-
+              <TextField
+  fullWidth
+  variant="filled"
+  type="date"
+  label="Date de début de conditionnement / d'admission"
+  onBlur={handleBlur}
+  onChange={handleChange}
+  value={values.dateadmission} // Use values.dateadmission
+  name="dateadmission"
+  error={!!touched.dateadmission && !!errors.dateadmission}
+  helperText={touched.dateadmission && errors.dateadmission}
+  sx={{ gridColumn: 'span 2' }}
+/>
+              <TextField
+  select
+  fullWidth
+  variant="filled"
+  label="Type de greffe"
+  onBlur={handleBlur}
+  onChange={handleChange}
+  value={values.typegreffe}
+  name="typegreffe"
+  error={!!touched.typegreffe && !!errors.typegreffe}
+  helperText={touched.typegreffe && errors.typegreffe}
+  sx={{ gridColumn: 'span 2' }}
+  SelectProps={{
+    native: true,
+  }}
+>
+  <option value="auto-greffe">Auto-greffe</option>
+  <option value="allo-greffe">Allo-greffe</option>
+  <option value="greffehapio">Greffe hapio-identique</option>
+  <option value="pas-de-greffe">Pas de greffe</option>
+</TextField>
 
 <TextField
-                fullWidth
-                variant="filled"
-                type="date" // Use type="date" for date input
-                label="Date de la greffe  / début de protocole"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.date}
-                name="dategreffe"
-                error={!!touched.dategreffe && !!errors.dategreffe}
-                helperText={touched.dategreffe && errors.dategreffe}
-                sx={{ gridColumn: 'span 2' }}
-              />
+  fullWidth
+  variant="filled"
+  type="date"
+  label="Date de la greffe / début de protocole"
+  onBlur={handleBlur}
+  onChange={handleChange}
+  value={values.dateprotocole} // Use values.dateprotocole
+  name="dateprotocole"
+  error={!!touched.dateprotocole && !!errors.dateprotocole}
+  helperText={touched.dateprotocole && errors.dateprotocole}
+  sx={{ gridColumn: 'span 2' }}
+/>
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Create New User
+              <Button type="submit" onClick={handleSubmit} color="secondary" variant="contained">
+                Ajouter patient
               </Button>
             </Box>
           </form>
@@ -271,31 +311,7 @@ const AjoutPatient = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
-const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required('required'),
-  lastName: yup.string().required('required'),
-  email: yup.string().email('invalid email').required('required'),
-  contact: yup
-    .string()
-    .matches(phoneRegExp, 'Phone number is not valid')
-    .required('required'),
-  address1: yup.string().required('required'),
-  address2: yup.string().required('required'),
-});
-const initialValues = {
-  prenom: '',
-  nom: '',
-  contact: '',
-  address: '',
-  gender: '',
-  age: '',
-  poids: '',
-  taille: '',
-  corporelle: '',
-  imc: '',
-};
+
 
 export default AjoutPatient;
