@@ -1,94 +1,77 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 const sequelize = require("../configdb");
-const Medecin = require('./medcin');
-const PrescriptionMedical = require('./prescription_medical');
+// const { Doctor } = require("./medcin");
 
-const Patient = sequelize.define('patient', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
+const Patient = sequelize.define("Patient", {
   nom: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   prenom: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
-  sexe: {
-    type: DataTypes.STRING(45),
+  gender: {
+    type: DataTypes.ENUM("homme", "femme"),
     allowNull: false,
   },
   age: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER, // Use DataTypes.INTEGER for age
     allowNull: false,
   },
   poids: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like poids
     allowNull: false,
   },
   taille: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like taille
     allowNull: false,
   },
-  SC: {
-    type: DataTypes.INTEGER,
+  corporelle: {
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like corporelle
     allowNull: false,
   },
   imc: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like imc
     allowNull: false,
   },
-  creatininePlasmatique: {
-    type: DataTypes.INTEGER,
+  plasmatique: {
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like plasmatique
     allowNull: false,
   },
-  clairanceCreatinine: {
-    type: DataTypes.INTEGER,
+  clairance: {
+    type: DataTypes.FLOAT, // Use DataTypes.FLOAT for numeric values like clairance
     allowNull: false,
   },
-  date: {
+  dateAdmission: {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  serviceHospitalisation: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  motifAdministration: {
-    type: DataTypes.STRING(45),
-    allowNull: false,
-  },
-  typeDeGreffe: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  protocole: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  dateGreffe: {
+  dateprotocole: {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  priseEnCharge: {
-    type: DataTypes.STRING(45),
+
+  typegreffe: {
+    type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      isIn: [["auto-greffe", "Allo-greffe", "pas-de-greffe"]],
+    },
+  },
+
+  is_approved: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
 });
 
-Patient.belongsTo(Medecin, {
-    foreignKey: 'medecin_id',
-    onDelete: 'NO ACTION',
-    onUpdate: 'NO ACTION',
-  });
+// Patient.belongsTo(Doctor, {
+//   foreignKey: "doctors_id",
+//   onDelete: "NO ACTION",
+//   onUpdate: "NO ACTION",
+// });
 
-Patient.belongsTo(PrescriptionMedical, {
-  foreignKey: 'prescription_medical_id',
-  onDelete: 'NO ACTION',
-  onUpdate: 'NO ACTION',
-});
-
-module.exports = Patient;
+module.exports = { Patient };

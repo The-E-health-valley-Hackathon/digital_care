@@ -7,7 +7,7 @@ const sequelize = new Sequelize("digitalCare", "dhia", "@Dhia12345@*", {
 });
 
 sequelize
-  .query("CREATE DATABASE IF NOT EXISTS `digitalCare`;")
+  .query("CREATE DATABASE IF NOT EXISTS `digitalcare`;")
   .then(() => {
     console.log("db connected");
   })
