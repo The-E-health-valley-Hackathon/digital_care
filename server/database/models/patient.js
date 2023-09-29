@@ -1,8 +1,8 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../configdb');
-const { Doctor } = require('./medcin');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../configdb");
+// const { Doctor } = require("./medcin");
 
-const Patient = sequelize.define('Patient', {
+const Patient = sequelize.define("Patient", {
   nom: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -14,7 +14,7 @@ const Patient = sequelize.define('Patient', {
     unique: true,
   },
   gender: {
-    type: DataTypes.ENUM('homme', 'femme'),
+    type: DataTypes.ENUM("homme", "femme"),
     allowNull: false,
   },
   age: {
@@ -58,7 +58,7 @@ const Patient = sequelize.define('Patient', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isIn: [['auto-greffe', 'Allo-greffe', 'pas-de-greffe']],
+      isIn: [["auto-greffe", "Allo-greffe", "pas-de-greffe"]],
     },
   },
 
@@ -68,7 +68,10 @@ const Patient = sequelize.define('Patient', {
   },
 });
 
-Patient.belongsTo(Doctor, { foreignKey: 'doctors_id', onDelete: 'NO ACTION', onUpdate: 'NO ACTION' })
-
+// Patient.belongsTo(Doctor, {
+//   foreignKey: "doctors_id",
+//   onDelete: "NO ACTION",
+//   onUpdate: "NO ACTION",
+// });
 
 module.exports = { Patient };

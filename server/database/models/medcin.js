@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configdb");
-
+// const { Patient } = require("./patient");
 const Doctor = sequelize.define("Doctor", {
   nom: {
     type: DataTypes.STRING,
@@ -37,11 +37,14 @@ const Doctor = sequelize.define("Doctor", {
     allowNull: false,
   },
   numeroDeTelphone: {
-    type: DataTypes.DATE,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
-
 
 module.exports = { Doctor };
