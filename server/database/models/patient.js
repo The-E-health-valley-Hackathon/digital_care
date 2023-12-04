@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../configdb");
-// const { Doctor } = require("./medcin");
+const { Doctor } = require("./medcin");
 
 const Patient = sequelize.define("Patient", {
   nom: {
@@ -66,12 +66,19 @@ const Patient = sequelize.define("Patient", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-});
+},
+{ timestamps: false,
+  underscored: true,
+}
 
-// Patient.belongsTo(Doctor, {
-//   foreignKey: "doctors_id",
-//   onDelete: "NO ACTION",
-//   onUpdate: "NO ACTION",
-// });
+);
+
+Patient.belongsTo(Doctor, {
+  foreignKey: "doctors_id",
+  onDelete: "NO ACTION",
+  onUpdate: "NO ACTION",
+}
+
+);
 
 module.exports = { Patient };

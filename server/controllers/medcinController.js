@@ -4,6 +4,24 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 module.exports = {
+
+  getOneMedecin: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const doctor = await Doctor.findByPk(id);
+  
+      if (!doctor) {
+        return res.status(404).json({ error: 'Doctor not found' });
+      }
+  
+      res.status(200).json(doctor);
+    } catch (error) {
+      console.error('Error fetching Doctor:', error);
+      res.status(500).json({ error: 'Failed to fetch Doctor' });
+    }
+  },
+  
+
   createDoctor: async (req, res) => {
     const {
       mot_de_passe,

@@ -137,4 +137,6 @@ const DeletePatient = async (req, res) => {
     }
   };
 
-module.exports = { AddPatient ,DeletePatient, getAllPatients, getOnePatient , updatePatient};
+  
+  module.exports = { AddPatient, DeletePatient, getAllPatients, getOnePatient, updatePatient };
+  

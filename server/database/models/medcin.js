@@ -45,6 +45,12 @@ const Doctor = sequelize.define("Doctor", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-});
+  
+
+} ,
+ { timestamps: false,
+  underscored: true,
+}
+);
 
 module.exports = { Doctor };
